@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+build/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv files
+.env
+.env.*.local
+
+# Prisma
+prisma/dev.db
+prisma/migrations/
+
+# Coverage (si usás Jest)
+coverage/
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
