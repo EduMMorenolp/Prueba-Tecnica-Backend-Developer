@@ -1,10 +1,13 @@
 import express from "express";
-
 import dotenv from "dotenv";
+
+// Importar rutas
 import messageRoutes from "./routes/message.routes";
 
+// Configuracion
 dotenv.config();
 const app = express();
+app.use(express.json());
 
 // Middlewares
 app.use(express.json());
@@ -22,8 +25,4 @@ app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });
 
-// Inicializar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-});
+export default app;

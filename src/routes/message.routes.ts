@@ -1,10 +1,11 @@
-import { Router } from "express";
-import * as MessageController from "@/controllers/message.controller";
+import express from "express";
+import { create, listByChat, search } from "@/controllers/message.controller";
 
-const messageRoutes = Router();
+const router = express.Router();
 
-messageRoutes.post("/", MessageController.create);
-messageRoutes.get("/chat/:chatId", MessageController.listByChat);
-messageRoutes.get("/search", MessageController.search);
+// Definir las rutas correctamente
+router.post("/", create);
+router.get("/search", search);
+router.get("/:chatId", listByChat);
 
-export default messageRoutes;
+export default router;
