@@ -1,13 +1,98 @@
+# 🚀 API de Comunicación Interna - REST
+
+Este es un sistema backend desarrollado en **Node.js con Express y TypeScript**, orientado a la comunicación interna entre usuarios (1 a 1, subgrupal y grupal). Los mensajes se almacenan en una base de datos estructurada, permitiendo consultas avanzadas por usuario, chat o tipo de conversación, todo listo para análisis posterior con IA.
+
+Además, incluye soporte para notificaciones en tiempo real usando **Socket.IO**, y está preparado para escalar y evolucionar fácilmente.
+
+## ✅ Funcionalidades principales
+
+- ✅ Enviar mensajes entre usuarios
+- ✅ Guardar mensajes con estructura escalable usando Prisma ORM
+- ✅ Consultar mensajes:
+  - Por ID de chat
+  - Por ID de usuario
+  - Por tipo de chat
+- ✅ Responder a mensajes específicos (`replyTo`)
+- ✅ Notificaciones en tiempo real con Socket.IO
+- ✅ Timestamps automáticos
+
+## 🧱 Tecnologías utilizadas
+
+| Herramienta | Descripción                                |
+| ----------- | ------------------------------------------ |
+| Node.js     | Entorno de ejecución JavaScript            |
+| Express     | Framework web minimalista                  |
+| TypeScript  | Tipado estático y mejor mantenimiento      |
+| Prisma      | ORM para gestión de base de datos          |
+| Zod         | Validación de datos en tiempo de ejecución |
+| Socket.IO   | Comunicación en tiempo real                |
+
 🧱 Estructura del proyecto
 
 ```bash
 src/
-├── config/             # Configuraciones (DB, env, etc.)
-├── controllers/        # Lógica de controladores
-├── services/           # Lógica de negocio
-├── routes/             # Endpoints de la API
-├── middlewares/        # Middlewares reutilizables
-├── prisma/             # Prisma schema y cliente
-├── utils/              # Utilidades auxiliares
-└── index.ts            # Entrada principal
+├── controllers/
+├── lib/
+├── middlewares/
+├── routes/
+├── services/
+├── types/
+├── validators/
+├── socket.ts
+├── server.ts
+└── app.ts
 ```
+
+## 🌐 Endpoints disponibles
+
+| Método | Endpoint                        | Descripción                                           |
+| ------ | ------------------------------- | ----------------------------------------------------- |
+| POST   | `/api/messages`                 | Crea un nuevo mensaje entre usuarios                  |
+| GET    | `/api/messages/chat/:chatId`    | Obtiene todos los mensajes de un chat específico      |
+| GET    | `/api/messages/user/:userId`    | Obtiene todos los mensajes enviados por un usuario    |
+| GET    | `/api/messages/chat-type/:type` | Obtiene todos los mensajes filtrados por tipo de chat |
+
+## 🚀 Instalación y uso
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/EduMMorenolp/Prueba-Tecnica-Backend-Developer.git
+cd Prueba-Tecnica-Backend-Developer
+```
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Configurar variables de entorno
+
+- Crea un archivo .env en la raíz usando el .env.example.
+
+### 4. Generar cliente Prisma
+
+```bash
+npx prisma generate
+```
+
+### 5. Migrar base de datos (Prisma)
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 6. Ejecutar el servidor
+
+```bash
+npm run build
+npm start
+```
+
+## 📝 Mejoras futuras
+
+- 🔒 Agregar autenticación JWT
+- 📑 Documentación con Swagger
+- 📊 Paginación en búsquedas
+- 🧽 Tests unitarios
