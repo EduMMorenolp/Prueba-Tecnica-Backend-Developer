@@ -1,26 +1,61 @@
-import prisma from "@/lib/prisma";
-import { CreateMessageDTO } from "@/types/message.types";
+import { PrismaClient, ChatType } from "@prisma/client";
 
-export const createMessage = async (data: CreateMessageDTO) => {
-  return prisma.message.create({ data });
-};
+const prisma = new PrismaClient();
 
-export const getMessagesByChatId = async (chatId: string) => {
-  return prisma.message.findMany({
-    where: { chatId },
-    orderBy: { createdAt: "asc" },
-    include: {
-      sender: true,
-      replyTo: true,
+interface CreateMessageInput {
+  content: string;
+  senderId: string;
+  chatId: string;
+  replyToId?: string;
+}
+
+export const createMessage = async ({
+  content,
+  senderId,
+  chatId,
+  replyToId,
+}: CreateMessageInput) => {
+  return prisma.message.create({
+    data: {
+      content,
+      senderId,
+      chatId,
+      replyToId,
     },
   });
 };
 
-export const searchMessages = async (query: string, userId?: string) => {
+export const getMessagesByChat = async (chatId: string) => {
+  return prisma.message.findMany({
+    where: { chatId },
+    orderBy: { createdAt: "asc" },
+    include: {
+      sender: { select: { id: true, name: true } },
+      replyTo: { select: { id: true, content: true } },
+    },
+  });
+};
+
+export const getMessagesByUser = async (userId: string) => {
+  return prisma.message.findMany({
+    where: { senderId: userId },
+    orderBy: { createdAt: "desc" },
+    include: {
+      chat: { select: { id: true, name: true, type: true } },
+    },
+  });
+};
+
+export const getMessagesByChatType = async (type: string) => {
   return prisma.message.findMany({
     where: {
-      content: { contains: query, mode: "insensitive" },
-      ...(userId && { senderId: userId }),
+      chat: {
+        type: type as ChatType,
+      },
+    },
+    include: {
+      chat: true,
+      sender: true,
     },
     orderBy: { createdAt: "desc" },
   });

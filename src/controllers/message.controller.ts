@@ -1,63 +1,68 @@
-import { Request, Response } from "express";
-import {
-  createMessage,
-  getMessagesByChatId,
-  searchMessages,
-} from "@/services/message.service";
-import { createMessageSchema } from "@/schemas/message.schema";
+import { Request, Response, NextFunction } from "express";
+import * as messageService from "../services/message.service.js";
+import { getIO } from "../socket.js";
 
-export const create = async (req: Request, res: Response): Promise<void> => {
+export const createMessage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    const parsed = createMessageSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error);
-      return;
-    }
+    const { content, senderId, chatId, replyToId } = req.body;
+    const message = await messageService.createMessage({
+      content,
+      senderId,
+      chatId,
+      replyToId,
+    });
 
-    const parsedData = {
-      content: parsed.data.content || "",
-      chatId: parsed.data.chatId,
-      senderId: parsed.data.senderId,
-      repliedToId: parsed.data.repliedToId,
-    };
+    // Emitir a los sockets en la sala del chat
+    const io = getIO();
+    io.to(chatId).emit("new_message", message);
 
-    const message = await createMessage(parsedData);
-    res.status(201).json(message);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al crear el mensaje" });
+    res.status(201).json({ message: "Message created", data: message });
+  } catch (error: any) {
+    console.error("Error creating message:", error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 };
 
-export const listByChat = async (
+export const getMessagesByChat = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { chatId } = req.params;
+    const messages = await messageService.getMessagesByChat(chatId);
+    res.status(200).json(messages);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMessagesByUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const messages = await messageService.getMessagesByUser(userId);
+    res.status(200).json(messages);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMessagesByChatType = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { chatId } = req.params;
-    if (!chatId) {
-      res.status(400).json({ error: "Missing chatId parameter" });
-      return;
-    }
-
-    const messages = await getMessagesByChatId(chatId);
+    const { type } = req.params;
+    const messages = await messageService.getMessagesByChatType(type);
     res.status(200).json(messages);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener los mensajes del chat" });
-  }
-};
-
-export const search = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { query, userId } = req.query;
-    if (!query || typeof query !== "string") {
-      res.status(400).json({ error: "Missing or invalid query parameter" });
-      return;
-    }
-
-    const results = await searchMessages(query, userId?.toString());
-    res.status(200).json(results);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al buscar los mensajes" });

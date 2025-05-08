@@ -1,11 +1,18 @@
-import express from "express";
-import { create, listByChat, search } from "@/controllers/message.controller";
+import { Router } from "express";
+import {
+  createMessage,
+  getMessagesByChat,
+  getMessagesByUser,
+  getMessagesByChatType,
+} from "../controllers/message.controller.js";
+import { validate } from "../middlewares/validate.js";
+import { createMessageSchema } from "../validators/message.schema.js";
 
-const router = express.Router();
+const router = Router();
 
-// Definir las rutas correctamente
-router.post("/", create);
-router.get("/search", search);
-router.get("/:chatId", listByChat);
+router.post("/", validate(createMessageSchema), createMessage);
+router.get("/chat/:chatId", getMessagesByChat);
+router.get("/user/:userId", getMessagesByUser);
+router.get("/chat-type/:type", getMessagesByChatType);
 
 export default router;

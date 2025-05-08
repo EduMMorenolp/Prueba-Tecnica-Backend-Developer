@@ -2,12 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 
 // Importar rutas
-import messageRoutes from "./routes/message.routes";
+import messageRoutes from "./routes/message.routes.js";
 
 // Configuracion
 dotenv.config();
 const app = express();
-app.use(express.json());
 
 // Middlewares
 app.use(express.json());
