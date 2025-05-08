@@ -62,6 +62,7 @@ async function main() {
   console.log("🌱 Datos iniciales creados con UUIDs");
   console.log("👤 Usuario 1:", user1.id);
   console.log("👥 Chat creado:", chat1.id);
+  console.log("[Github]: https://github.com/EduMMorenolp");
 }
 
 main()
