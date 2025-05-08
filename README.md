@@ -43,15 +43,6 @@ src/
 └── app.ts
 ```
 
-## 🌐 Endpoints disponibles
-
-| Método | Endpoint                        | Descripción                                           |
-| ------ | ------------------------------- | ----------------------------------------------------- |
-| POST   | `/api/messages`                 | Crea un nuevo mensaje entre usuarios                  |
-| GET    | `/api/messages/chat/:chatId`    | Obtiene todos los mensajes de un chat específico      |
-| GET    | `/api/messages/user/:userId`    | Obtiene todos los mensajes enviados por un usuario    |
-| GET    | `/api/messages/chat-type/:type` | Obtiene todos los mensajes filtrados por tipo de chat |
-
 ## 🚀 Instalación y uso
 
 ### 1. Clonar el repositorio
@@ -89,6 +80,32 @@ npx prisma migrate dev --name init
 npm run build
 npm start
 ```
+
+### 7. Crear datos iniciales con el script de seed
+
+```bash
+npx tsx src/scripts/seed.ts
+```
+
+### 8. Probar los endpoints con Thunder Client
+
+Con el servidor corriendo, puedes usar Thunder Client (extensión de VS Code) o cualquier cliente HTTP para probar los endpoints.
+
+- Ejemplo:
+```bash
+  "content": "Este es un mensaje de prueba",
+  "senderId": "5cc7821e-afa6-4e80-b564-a0bd02c7e7eb",
+  "chatId": "5379c163-a950-4851-b2b7-cf49946ed50e"
+```
+
+## 🌐 Endpoints disponibles
+
+| Método | Endpoint                        | Descripción                                           |
+| ------ | ------------------------------- | ----------------------------------------------------- |
+| POST   | `/api/messages`                 | Crea un nuevo mensaje entre usuarios                  |
+| GET    | `/api/messages/chat/:chatId`    | Obtiene todos los mensajes de un chat específico      |
+| GET    | `/api/messages/user/:userId`    | Obtiene todos los mensajes enviados por un usuario    |
+| GET    | `/api/messages/chat-type/:type` | Obtiene todos los mensajes filtrados por tipo de chat |
 
 ## 📝 Mejoras futuras
 
